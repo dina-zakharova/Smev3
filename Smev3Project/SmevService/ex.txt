@@ -1,0 +1,7 @@
+.config
+.InstallLog
+.InstallState
+.pdb
+.txt
+.vshost
+.manifest

@@ -1,0 +1,76 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon" xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid" xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors" 
+        dx:ThemeManager.ThemeName="Office2013LightGray"
+        x:Class="SmevApp.MainWindow"
+        mc:Ignorable="d"
+        Title="СМЭВ" Height="449.693" Width="677.47" WindowState="Maximized" WindowStartupLocation="CenterScreen" 
+        Closing="MainWindow_OnClosing" WindowStyle="SingleBorderWindow" 
+    >
+    <Window.Resources>
+        <DataTemplate x:Key="CustomPrintGroupRowTemplate">
+            <ContentControl Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource TemplatedParent}}">
+                <Grid DataContext="{Binding Path=DataContext.Content, RelativeSource={RelativeSource TemplatedParent}}">
+                    <dxe:TextEdit Background="DarkGray"  Text="{Binding Path=GroupValue.Value}"/>
+                </Grid>
+            </ContentControl>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <dxr:RibbonControl ToolbarShowMode="Hide" ShowApplicationButton="False" RibbonStyle="Office2010" PageCategoryAlignment="Right" VerticalAlignment="Top" Height="141" MinimizationButtonVisibility="Auto">
+            <dxr:RibbonDefaultPageCategory Caption="defaultCategory">
+                <dxr:RibbonPage Caption="Главная">
+                    <dxr:RibbonPageGroup Caption="Сообщение">
+                        <dxb:BarButtonItem x:Name="BtnAck" Content="Отправить на подтверждение" KeyGesture="F1" Hint="Отправка подтверждения получения сообщения (F1)" LargeGlyph="{dx:DXImageOffice2013 Image=Apply_32x32.png}" ItemClick="BtnAck_OnItemClick"/>
+                        <dxb:BarButtonItem x:Name="BtnDelete" Content="Удалить сообщение" KeyGesture="F2" Hint="Удаление сообщения (F2)" LargeGlyph="{dx:DXImageOffice2013 Image=Cancel_32x32.png}" ItemClick="BtnDelete_OnItemClick"/>
+                        <dxb:BarButtonItem x:Name="BtnDownload" Content="Скачать" KeyGesture="F3" Hint="Скачивание сообщения (F3)" LargeGlyph="{dx:DXImageOffice2013 Image=ExportToXML_32x32.png}" ItemClick="BtnDownload_OnItemClick"/>
+                    </dxr:RibbonPageGroup>
+                    <dxr:RibbonPageGroup Caption="Отправка">
+                        <dxb:BarButtonItem x:Name="BtnSendRequest" Content="Отправить запрос" KeyGesture="F6" Hint="Кладет запрос в папку СМЭВ (не реализовано)" LargeGlyph="{dx:DXImageOffice2013 Image=NewMail_32x32.png}" ItemClick="BtnSendRequest_OnItemClick"/>
+                        <dxb:BarButtonItem x:Name="BtnSendResponse" Content="Отправить ответ" KeyGesture="F7" Hint="Кладет ответ в папку СМЭВ (не реализовано)" LargeGlyph="{dx:DXImageOffice2013 Image=Send_32x32.png}" ItemClick="BtnSendResponse_OnItemClick"/>
+                        <dxb:BarButtonItem x:Name="BtnSendReject" Content="Отправить отказ" KeyGesture="F8" Hint="Отправка отказа (F8)" LargeGlyph="{dx:DXImageOffice2013 Image=EmailTemplate_32x32.png}" ItemClick="BtnSendReject_OnItemClick"/>
+                    </dxr:RibbonPageGroup>
+                    <dxr:RibbonPageGroup Caption="Настройки">
+                        <dxb:BarButtonItem x:Name="BtnVidSved" Content="Добавить вид сведений" KeyGesture="F4" Hint="Добавление видов сведений (не реализован)" LargeGlyph="{dx:DXImageOffice2013 Image=Edit_32x32.png}" ItemClick="BtnVidSved_OnItemClick"/>
+                    </dxr:RibbonPageGroup>
+
+                </dxr:RibbonPage>
+            </dxr:RibbonDefaultPageCategory>
+        </dxr:RibbonControl>
+        <dxg:GridControl x:Name="GridControl" 
+                         AutoGenerateColumns="KeepOld" EnableSmartColumnsGeneration="True" SelectionMode="MultipleRow" AutoExpandAllGroups="True"
+                         dx:DXSerializer.SerializationID="grid" 
+                         dx:DXSerializer.StoreLayoutMode="All" 
+                         dxg:DataControlSerializationOptions.AddNewColumns="True" 
+                         dxg:DataControlSerializationOptions.RemoveOldColumns="True" 
+                         CustomColumnDisplayText="GridControl_OnCustomColumnDisplayText"  Margin="0,141,0,0"
+                         CustomSummary="GridControl_OnCustomSummary"
+                         SelectionChanged="GridControl_OnSelectionChanged"
+                         >
+            <dxg:GridControl.View>
+                <dxg:TableView PrintGroupRowTemplate="{StaticResource CustomPrintGroupRowTemplate}" x:Name="TableView"  
+                               AllowPerPixelScrolling="True" ShowTotalSummary="False" AllowEditing="False"
+                               ShowCheckBoxSelectorColumn="True" ShowAutoFilterRow="True"
+                               ShowSearchPanelMode="Always" SearchPanelAllowFilter="True" 
+                               ShowSearchPanelFindButton="True" ShowFixedTotalSummary="True" >
+                    <dxg:TableView.GroupValueTemplate>
+                        <DataTemplate>
+                            <Border Style="{Binding Path=View.GroupValueContentStyle}">
+                                <TextBlock Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Path=Value}"/>
+                            </Border>
+                        </DataTemplate>
+                    </dxg:TableView.GroupValueTemplate>
+                </dxg:TableView>
+            </dxg:GridControl.View>
+            <dxg:GridControl.TotalSummary>
+                <dxg:GridSummaryItem SummaryType="Count" Alignment="Left" DisplayFormat="Всего: {0}" />
+                <dxg:GridSummaryItem SummaryType="Custom" Alignment="Left" FieldName="Id" DisplayFormat="Выбрано: {0}" />
+            </dxg:GridControl.TotalSummary>
+        </dxg:GridControl>
+    </Grid>
+</Window>
