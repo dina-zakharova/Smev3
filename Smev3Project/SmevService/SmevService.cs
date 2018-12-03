@@ -311,12 +311,13 @@ namespace SmevService
 
                     var filename = new FileInfo(file).Name.ToUpper();
 
-                    var fs = new MemoryStream(File.ReadAllBytes(file));
+                    using (var fs = new MemoryStream(File.ReadAllBytes(file)))
+                    {
+                        var doc = new XmlDocument();
 
-                    var doc = new XmlDocument();
-
-                    doc.Load(fs);
-
+                        doc.Load(fs);
+                    }
+                    
                     var match = Regex.Match(filename, @"^(?<prefix>\S+)_OUT_(?<messageId>\S{36})(?<test>\S+).XML$");
 
                     if (!match.Success)
